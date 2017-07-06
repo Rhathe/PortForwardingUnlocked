@@ -4,17 +4,14 @@
 	android:orientation="vertical"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:clickable="true"
->
+	android:clickable="true">
 	<TextView
 		android:id="@+id/name"
 		android:layout_width="match_parent"
-		android:layout_height="40dp"
-	/>
+		android:layout_height="40dp"/>
 
 	<TextView
 		android:id="@+id/details"
 		android:layout_width="match_parent"
-		android:layout_height="40dp"
-	/>
+		android:layout_height="40dp"/>
 </LinearLayout>

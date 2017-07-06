@@ -64,7 +64,7 @@ public class ForwardingService extends IntentService {
 		LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
 
 		AppDatabase db = AppDatabase.getAppDatabase(this);
-		List<Rule> rules = db.ruleDao().getAllEnabled();
+		List<Rule> rules = db.ruleDao().getAllEnabledSync();
 
 		CompletionService<Void> completionService = new ExecutorCompletionService<>(executorService);
 

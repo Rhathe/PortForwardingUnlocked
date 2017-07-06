@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">PortForwardingUnlocked</string>
+	<string name="app_name">PortForwardingUnlocked</string>
+
+	<string-array name="protocols">
+		<item>TCP</item>
+		<item>UDP</item>
+		<item>BOTH</item>
+	</string-array>
 </resources>

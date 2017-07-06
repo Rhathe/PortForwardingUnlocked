@@ -1,5 +1,6 @@
 package com.rhathe.portforwardingunlocked;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -11,10 +12,16 @@ import java.util.List;
 @Dao
 public interface RuleDao {
 	@Query("SELECT * FROM rule")
-	List<Rule> getAll();
+	LiveData<List<Rule>> getAll();
 
 	@Query("SELECT * FROM rule WHERE is_enabled = 1")
-	List<Rule> getAllEnabled();
+	LiveData<List<Rule>> getAllEnabled();
+
+	@Query("SELECT * FROM rule WHERE is_enabled = 1")
+	List<Rule> getAllEnabledSync();
+
+	@Insert
+	void insert(Rule rule);
 
 	@Insert
 	void insertAll(Rule... rules);

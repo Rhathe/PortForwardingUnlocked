@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent">
+
+	<android.support.design.widget.TextInputLayout
+		android:id="@+id/name_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<EditText
+			android:id="@+id/name"
+			android:layout_width="match_parent"
+			android:layout_height="82dp"
+			android:inputType="text"
+			android:hint="Rule Name"/>
+	</android.support.design.widget.TextInputLayout>
+
+	<TextView
+		android:text="Protocol"
+		android:layout_width="match_parent"
+		android:layout_height="20dp"/>
+	<Spinner
+		android:id="@+id/protocol"
+		android:entries="@array/protocols"
+		android:layout_width="match_parent"
+		android:layout_height="82dp" />
+</LinearLayout>
