@@ -2,13 +2,31 @@ package com.rhathe.portforwardingunlocked;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+import android.databinding.Observable;
+import android.databinding.PropertyChangeRegistry;
 
 import java.net.InetSocketAddress;
 
 
 @Entity(tableName = "rule")
-public class Rule {
+public class Rule implements Observable {
+
+	@Ignore
+	private PropertyChangeRegistry registry = new PropertyChangeRegistry();
+
+	@Override
+	public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+		registry.add(callback);
+	}
+
+	@Override
+	public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+		registry.remove(callback);
+	}
 
 	// Column Fields
 
@@ -42,6 +60,8 @@ public class Rule {
 	@ColumnInfo(name = "is_enabled")
 	private Boolean isEnabled;
 
+	@Ignore
+	private String protocol;
 
 	// Getters and Setters
 
@@ -53,12 +73,14 @@ public class Rule {
 		this.uid = uid;
 	}
 
+	@Bindable
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+		registry.notifyChange(this, BR.name);
 	}
 
 	public Boolean getIsTcp() {
@@ -123,5 +145,29 @@ public class Rule {
 
 	public void setIsEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
+	}
+
+	public String getProtocol() throws Exception {
+		if (getIsTcp() && getIsUdp()) return "BOTH";
+		else if (getIsTcp()) return "TCP";
+		else if (getIsUdp()) return "UDP";
+		throw new Exception("No protocol matching");
+	}
+
+	public void setProtocol(String protocol) {
+		switch(protocol) {
+			case "TCP":
+				setIsTcp(true);
+				setIsUdp(false);
+				break;
+			case "UDP":
+				setIsTcp(false);
+				setIsUdp(true);
+				break;
+			default:
+				setIsTcp(true);
+				setIsUdp(true);
+				break;
+		}
 	}
 }

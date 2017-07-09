@@ -20,6 +20,9 @@ public interface RuleDao {
 	@Query("SELECT * FROM rule WHERE is_enabled = 1")
 	List<Rule> getAllEnabledSync();
 
+	@Query("SELECT * FROM rule WHERE uid = :uid")
+	Rule getById(String uid);
+
 	@Insert
 	void insert(Rule rule);
 

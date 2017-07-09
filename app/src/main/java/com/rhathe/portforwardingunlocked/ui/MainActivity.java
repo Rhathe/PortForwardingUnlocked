@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,7 +28,7 @@ public class MainActivity extends LifecycleActivity {
 
 		FloatingActionButton fab = findViewById(R.id.fab);
 		fab.setOnClickListener(view -> {
-			Intent newRuleIntent = new Intent(this, NewRuleActivity.class);
+			Intent newRuleIntent = new Intent(this, BaseRuleActivity.class);
 			startActivity(newRuleIntent);
 		});
 
