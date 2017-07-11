@@ -25,27 +25,23 @@ import com.rhathe.portforwardingunlocked.BR
 
 class BaseRuleActivity : AppCompatActivity() {
 	var rule: Rule = Rule()
-	var db: AppDatabase? = null
+	var db: AppDatabase = AppDatabase.getAppDatabase(this)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		initFromInterfaceSpinner()
+		initFromInterfaces()
 
 		val binding: ViewDataBinding = DataBindingUtil.setContentView(this, R.layout.rule_detail)
-
-		val _db = AppDatabase.getAppDatabase(this)
-		val ruleId = intent.extras?.get("ruleId").toString()
+		val ruleId = (intent.extras?.get("ruleId") ?: "").toString()
 
 		Thread {
 			if (ruleId.isNotEmpty()) {
-				rule = _db.ruleDao().getById(ruleId)
+				rule = db.ruleDao().getById(ruleId)
 			}
-		}
 
-		binding.setVariable(BR.rule, rule)
-
-		db = _db
+			binding.setVariable(BR.rule, rule)
+		}.start()
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -82,11 +78,8 @@ class BaseRuleActivity : AppCompatActivity() {
 		}).filter({ x -> x != "" })
 	}
 
-	private fun initFromInterfaceSpinner() {
-		val interfaces = getInterfaces()
-		val spinner = findViewById<Spinner>(R.id.from_interface)
-		val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, interfaces)
-		//spinner.adapter = adapter
+	private fun initFromInterfaces() {
+		rule.fromInterfaces = getInterfaces()
 	}
 
 	private fun backToMain(fn: () -> Unit) {
@@ -101,8 +94,6 @@ class BaseRuleActivity : AppCompatActivity() {
 
 	private fun saveRule() {
 		try {
-			//setRuleProtocol(rule)
-			//setFromInterface(rule)
 			setRuleEnabled(rule)
 
 			backToMain {
@@ -117,25 +108,6 @@ class BaseRuleActivity : AppCompatActivity() {
 		backToMain {
 			db?.ruleDao()?.delete(rule)
 		}
-	}
-
-	private fun setRuleProtocol(rule: Rule) {
-		val protocolSpinner = findViewById<View>(R.id.protocol) as Spinner
-		val protocol = protocolSpinner.selectedItem.toString()
-
-		// determine the protocol
-		when (protocol) {
-			"TCP" -> rule.isTcp = true
-			"UDP" -> rule.isUdp = true
-			"BOTH" -> {
-				rule.isTcp = true
-				rule.isUdp = true
-			}
-		}
-	}
-
-	private fun setFromInterface(rule: Rule) {
-
 	}
 
 	private fun setRuleEnabled(rule: Rule) {

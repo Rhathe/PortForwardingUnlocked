@@ -10,6 +10,7 @@ import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 
 
 @Entity(tableName = "rule")
@@ -28,6 +29,10 @@ public class Rule implements Observable {
 		registry.remove(callback);
 	}
 
+	private enum Protocols {
+		TCP, UDP, BOTH
+	}
+
 	// Column Fields
 
 	@PrimaryKey(autoGenerate = true)
@@ -37,10 +42,10 @@ public class Rule implements Observable {
 	private String name;
 
 	@ColumnInfo(name = "is_tcp")
-	private Boolean isTcp;
+	private Boolean isTcp = true;
 
 	@ColumnInfo(name = "is_udp")
-	private Boolean isUdp;
+	private Boolean isUdp = false;
 
 	@ColumnInfo(name = "from_port")
 	private int fromPort;
@@ -61,7 +66,7 @@ public class Rule implements Observable {
 	private Boolean isEnabled;
 
 	@Ignore
-	private String protocol;
+	public List<String> fromInterfaces;
 
 	// Getters and Setters
 
@@ -107,12 +112,14 @@ public class Rule implements Observable {
 		this.fromPort = fromPort;
 	}
 
+	@Bindable
 	public String getFromInterface() {
 		return fromInterface;
 	}
 
 	public void setFromInterface(String fromInterface) {
 		this.fromInterface = fromInterface;
+		registry.notifyChange(this, BR.fromInterface);
 	}
 
 	public int getPortRange() {
@@ -147,11 +154,12 @@ public class Rule implements Observable {
 		this.isEnabled = isEnabled;
 	}
 
-	public String getProtocol() throws Exception {
+	@Bindable
+	public String getProtocol() {
 		if (getIsTcp() && getIsUdp()) return "BOTH";
 		else if (getIsTcp()) return "TCP";
 		else if (getIsUdp()) return "UDP";
-		throw new Exception("No protocol matching");
+		return "BOTH";
 	}
 
 	public void setProtocol(String protocol) {
@@ -169,5 +177,30 @@ public class Rule implements Observable {
 				setIsUdp(true);
 				break;
 		}
+		registry.notifyChange(this, BR.protocol);
+	}
+
+	@Bindable
+	public int getProtocolIdx() {
+		return Protocols.valueOf(getProtocol()).ordinal();
+	}
+
+	public void setProtocolIdx(int protocolIdx) {
+		String newProtocol = Protocols.values()[protocolIdx].toString();
+		setProtocol(newProtocol);
+		registry.notifyChange(this, BR.protocolIdx);
+	}
+
+	@Bindable
+	public int getFromInterfaceIdx() {
+		int idx = fromInterfaces.indexOf(fromInterface);
+		if (idx >= 0) return idx;
+		return 0;
+	}
+
+	public void setFromInterfaceIdx(int fromInterfaceIdx) {
+		String newFromInterface = fromInterfaces.get(fromInterfaceIdx);
+		setFromInterface(newFromInterface);
+		registry.notifyChange(this, BR.fromInterfaceIdx);
 	}
 }
