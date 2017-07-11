@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,6 +45,9 @@ public class MainActivity extends LifecycleActivity {
 			for (Rule rule : rules) {
 				LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.rule_item, null, false);
 				replaceInLayout(layout, R.id.name, rule.getName());
+				layout.setOnClickListener((View v) -> {
+					goToRule(rule);
+				});
 				mainView.addView(layout);
 			}
 		});
@@ -52,5 +56,11 @@ public class MainActivity extends LifecycleActivity {
 	private void replaceInLayout(LinearLayout layout, int id, String text) {
 		TextView view = layout.findViewById(id);
 		view.setText(text);
+	}
+
+	private void goToRule(Rule rule) {
+		Intent ruleIntent = new Intent(this, BaseRuleActivity.class);
+		ruleIntent.putExtra("ruleUid", rule.getUid());
+		startActivity(ruleIntent);
 	}
 }

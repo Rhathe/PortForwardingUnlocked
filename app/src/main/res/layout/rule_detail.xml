@@ -8,14 +8,14 @@
 		<variable name="rule" type="com.rhathe.portforwardingunlocked.Rule"/>
 	</data>
 
-	<android.support.constraint.ConstraintLayout
+	<LinearLayout
 		android:orientation="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
 		<android.support.design.widget.TextInputLayout
 			android:layout_width="match_parent"
-			android:layout_height="80dp"
+			android:layout_height="@dimen/rule_detail_height"
 			android:id="@+id/name_layout"
 			android:theme="@style/ruleDetailField">
 
@@ -31,55 +31,27 @@
 		<TextView
 			android:text="Protocol"
 			android:layout_width="match_parent"
-			android:layout_height="18dp"
-			android:id="@+id/textView"
-			android:layout_marginTop="60dp"
-			app:layout_constraintTop_toBottomOf="@+id/name_layout"
-			app:layout_constraintStart_toStartOf="parent"
-			android:layout_marginStart="8dp"
-			app:layout_constraintEnd_toEndOf="parent"
-			android:layout_marginEnd="8dp"
-			app:layout_constraintHorizontal_bias="0.0"/>
+			android:layout_height="@dimen/rule_detail_height"
+			android:id="@+id/textView"/>
 
 		<Spinner
 			android:id="@+id/protocol"
 			android:entries="@array/protocols"
-			android:layout_width="340dp"
-			android:layout_height="81dp"
-			app:layout_constraintStart_toStartOf="parent"
-			android:layout_marginStart="8dp"
-			app:layout_constraintEnd_toEndOf="parent"
-			android:layout_marginEnd="8dp"
-			android:layout_marginTop="28dp"
-			android:selectedItemPosition="@={rule.protocolIdx}"
-			app:layout_constraintTop_toBottomOf="@+id/textView"/>
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/rule_detail_height"
+			android:selectedItemPosition="@={rule.protocolIdx}"/>
 
 		<TextView
 			android:text="Interface"
 			android:layout_width="match_parent"
-			android:layout_height="17dp"
-			android:layout_marginTop="36dp"
-			app:layout_constraintTop_toBottomOf="@+id/protocol"
-			android:id="@+id/textView2"
-			app:layout_constraintStart_toStartOf="parent"
-			android:layout_marginStart="8dp"
-			app:layout_constraintEnd_toEndOf="parent"
-			android:layout_marginEnd="8dp"
-			app:layout_constraintHorizontal_bias="1.0"/>
+			android:layout_height="@dimen/rule_detail_height"/>
 		<Spinner
 			android:id="@+id/from_interface"
 			android:layout_width="match_parent"
-			android:layout_height="82dp"
-			app:layout_constraintTop_toBottomOf="@+id/textView2"
-			app:layout_constraintStart_toStartOf="parent"
-			android:layout_marginStart="8dp"
-			android:layout_marginEnd="8dp"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintHorizontal_bias="0.0"
+			android:layout_height="@dimen/rule_detail_height"
 			android:entries="@{rule.fromInterfaces}"
-			android:selectedItemPosition="@={rule.fromInterfaceIdx}"
-			android:layout_marginTop="28dp"/>
+			android:selectedItemPosition="@={rule.fromInterfaceIdx}"/>
 
-	</android.support.constraint.ConstraintLayout>
+	</LinearLayout>
 
 </layout>

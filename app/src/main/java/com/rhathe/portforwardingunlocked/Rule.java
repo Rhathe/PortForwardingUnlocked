@@ -8,8 +8,10 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
+import android.util.Log;
 
 import java.net.InetSocketAddress;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -63,10 +65,10 @@ public class Rule implements Observable {
 	private int targetPort;
 
 	@ColumnInfo(name = "is_enabled")
-	private Boolean isEnabled;
+	private Boolean isEnabled = true;
 
 	@Ignore
-	public List<String> fromInterfaces;
+	public List<String> fromInterfaces = Collections.emptyList();
 
 	// Getters and Setters
 
@@ -88,16 +90,14 @@ public class Rule implements Observable {
 		registry.notifyChange(this, BR.name);
 	}
 
-	public Boolean getIsTcp() {
-		return isTcp;
-	}
+	public Boolean getIsTcp() { return Boolean.TRUE.equals(isTcp); }
 
 	public void setIsTcp(Boolean isTcp) {
 		this.isTcp = isTcp;
 	}
 
 	public Boolean getIsUdp() {
-		return isUdp;
+		return Boolean.TRUE.equals(isUdp);
 	}
 
 	public void setIsUdp(Boolean isUdp) {
@@ -193,7 +193,8 @@ public class Rule implements Observable {
 
 	@Bindable
 	public int getFromInterfaceIdx() {
-		int idx = fromInterfaces.indexOf(fromInterface);
+		String fi = fromInterface == null ? "" : fromInterface;
+		int idx = fromInterfaces.indexOf(fi);
 		if (idx >= 0) return idx;
 		return 0;
 	}

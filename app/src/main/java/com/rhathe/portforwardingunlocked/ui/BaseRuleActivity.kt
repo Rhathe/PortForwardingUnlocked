@@ -24,22 +24,22 @@ import com.rhathe.portforwardingunlocked.BR
 
 
 class BaseRuleActivity : AppCompatActivity() {
+	var ruleUid: String = ""
 	var rule: Rule = Rule()
 	var db: AppDatabase = AppDatabase.getAppDatabase(this)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		initFromInterfaces()
-
 		val binding: ViewDataBinding = DataBindingUtil.setContentView(this, R.layout.rule_detail)
-		val ruleId = (intent.extras?.get("ruleId") ?: "").toString()
+		ruleUid = (intent.extras?.get("ruleUid") ?: "").toString()
 
 		Thread {
-			if (ruleId.isNotEmpty()) {
-				rule = db.ruleDao().getById(ruleId)
+			if (ruleUid.isNotEmpty()) {
+				rule = db.ruleDao().getById(ruleUid)
 			}
 
+			initFromInterfaces()
 			binding.setVariable(BR.rule, rule)
 		}.start()
 	}
@@ -93,14 +93,9 @@ class BaseRuleActivity : AppCompatActivity() {
 	}
 
 	private fun saveRule() {
-		try {
-			setRuleEnabled(rule)
-
-			backToMain {
-				db?.ruleDao()?.insert(rule)
-			}
-		} catch (e: Exception) {
-			Log.e("portforwardingunlocked", e.message)
+		backToMain {
+			if (ruleUid.isBlank()) db.ruleDao().insert(rule)
+			else db.ruleDao().update(rule)
 		}
 	}
 
@@ -108,9 +103,5 @@ class BaseRuleActivity : AppCompatActivity() {
 		backToMain {
 			db?.ruleDao()?.delete(rule)
 		}
-	}
-
-	private fun setRuleEnabled(rule: Rule) {
-		rule.isEnabled = true
 	}
 }
