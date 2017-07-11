@@ -122,28 +122,34 @@ public class Rule implements Observable {
 		registry.notifyChange(this, BR.fromInterface);
 	}
 
+	@Bindable
 	public int getPortRange() {
 		return portRange;
 	}
 
 	public void setPortRange(int portRange) {
 		this.portRange = portRange;
+		registry.notifyChange(this, BR.portRange);
 	}
 
+	@Bindable
 	public String getTarget() {
 		return target;
 	}
 
 	public void setTarget(String target) {
 		this.target = target;
+		//registry.notifyChange(this, BR.target);
 	}
 
+	@Bindable
 	public int getTargetPort() {
 		return targetPort;
 	}
 
 	public void setTargetPort(int targetPort) {
 		this.targetPort = targetPort;
+		registry.notifyChange(this, BR.targetPort);
 	}
 
 	public Boolean getIsEnabled() {
@@ -204,4 +210,24 @@ public class Rule implements Observable {
 		setFromInterface(newFromInterface);
 		registry.notifyChange(this, BR.fromInterfaceIdx);
 	}
+
+	@Bindable
+	public int getFromEndPort() {
+		return getFromPort() + getPortRange();
+	}
+
+	public void setFromEndPort(int fromEndPort) {
+		setPortRange(fromEndPort - getFromPort());
+		registry.notifyChange(this, BR.fromEndPort);
+	}
+
+	// Helper Functions
+
+	public void checkIsValid() throws Exception {
+		if (name == null || name.isEmpty()) throw new EmptyNameException();
+		if (portRange < 0) throw new NegativeRangeException();
+	}
+
+	public static class EmptyNameException extends Exception {}
+	public static class NegativeRangeException extends Exception {}
 }

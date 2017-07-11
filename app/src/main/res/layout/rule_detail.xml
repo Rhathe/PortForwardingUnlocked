@@ -31,7 +31,7 @@
 		<TextView
 			android:text="Protocol"
 			android:layout_width="match_parent"
-			android:layout_height="@dimen/rule_detail_height"
+			android:layout_height="@dimen/label_height"
 			android:id="@+id/textView"/>
 
 		<Spinner
@@ -44,13 +44,74 @@
 		<TextView
 			android:text="Interface"
 			android:layout_width="match_parent"
-			android:layout_height="@dimen/rule_detail_height"/>
+			android:layout_height="@dimen/label_height"/>
 		<Spinner
 			android:id="@+id/from_interface"
 			android:layout_width="match_parent"
 			android:layout_height="@dimen/rule_detail_height"
 			android:entries="@{rule.fromInterfaces}"
 			android:selectedItemPosition="@={rule.fromInterfaceIdx}"/>
+
+		<TextView
+			android:text="From Ports"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/label_height"/>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/rule_detail_height">
+
+			<EditText
+				android:text="@={`` + rule.fromPort}"
+				android:id="@+id/from_port"
+				android:layout_width="80dp"
+				android:layout_height="match_parent"
+				android:inputType="number"
+				android:hint="Start"/>
+			<TextView
+				android:text="-"
+				android:layout_width="40dp"
+				android:layout_height="@dimen/label_height"/>
+			<EditText
+				android:text="@={`` + rule.fromEndPort}"
+				android:id="@+id/from_end_port"
+				android:layout_width="80dp"
+				android:layout_height="match_parent"
+				android:inputType="number"
+				android:hint="End"/>
+
+		</LinearLayout>
+
+		<TextView
+			android:text="Target Ports"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/label_height"/>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/rule_detail_height">
+
+			<EditText
+				android:text="@={`` + rule.targetPort}"
+				android:id="@+id/target_port"
+				android:layout_width="80dp"
+				android:layout_height="match_parent"
+				android:inputType="number"
+				android:hint="Start"/>
+			<TextView
+				android:text="-"
+				android:layout_width="40dp"
+				android:layout_height="@dimen/label_height"/>
+			<EditText
+				android:text="@{`` + (rule.targetPort + rule.portRange)}"
+				android:id="@+id/target_end_port"
+				android:inputType="none"
+				android:focusable="false"
+				android:clickable="false"
+				android:layout_width="80dp"
+				android:layout_height="match_parent"/>
+
+		</LinearLayout>
 
 	</LinearLayout>
 

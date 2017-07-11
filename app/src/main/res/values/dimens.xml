@@ -1,4 +1,5 @@
 <resources>
 	<dimen name="fab_margin">16dp</dimen>
 	<dimen name="rule_detail_height">80dp</dimen>
+	<dimen name="label_height">16dp</dimen>
 </resources>

@@ -84,16 +84,29 @@ class BaseRuleActivity : AppCompatActivity() {
 
 	private fun backToMain(fn: () -> Unit) {
 		Thread {
-			fn()
-			val intent = Intent(this, MainActivity::class.java)
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-			startActivity(intent)
-			finish()
+			try {
+				fn()
+				val intent = Intent(this, MainActivity::class.java)
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+				startActivity(intent)
+				finish()
+			} catch(e: Rule.EmptyNameException) {
+				runOnUiThread({
+					val et = findViewById<EditText>(R.id.name)
+					et.error = "Name is empty"
+				})
+			} catch(e: Rule.NegativeRangeException) {
+				runOnUiThread({
+					val et = findViewById<EditText>(R.id.from_end_port)
+					et.error = "End port must be >= to start port"
+				})
+			}
 		}.start()
 	}
 
 	private fun saveRule() {
 		backToMain {
+			rule.checkIsValid()
 			if (ruleUid.isBlank()) db.ruleDao().insert(rule)
 			else db.ruleDao().update(rule)
 		}
