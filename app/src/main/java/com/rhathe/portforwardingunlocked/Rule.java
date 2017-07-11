@@ -72,12 +72,14 @@ public class Rule implements Observable {
 
 	// Getters and Setters
 
+	@Bindable
 	public int getUid() {
 		return uid;
 	}
 
 	public void setUid(int uid) {
 		this.uid = uid;
+		registry.notifyChange(this, BR.uid);
 	}
 
 	@Bindable
@@ -152,12 +154,12 @@ public class Rule implements Observable {
 		registry.notifyChange(this, BR.targetPort);
 	}
 
-	public Boolean getIsEnabled() {
-		return isEnabled;
-	}
+	@Bindable
+	public Boolean getIsEnabled() { return Boolean.TRUE.equals(isEnabled); }
 
 	public void setIsEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
+		registry.notifyChange(this, BR.isEnabled);
 	}
 
 	@Bindable

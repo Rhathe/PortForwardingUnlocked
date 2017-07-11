@@ -38,17 +38,20 @@ public class MainActivity extends LifecycleActivity {
 
 	private void showRuleItems() {
 		LayoutInflater inflater = LayoutInflater.from(mContext);
-		LinearLayout mainView = (LinearLayout) findViewById(R.id.main_content_view);
+		LinearLayout enabledView = (LinearLayout) findViewById(R.id.enabled_rules);
+		LinearLayout disabledView = (LinearLayout) findViewById(R.id.disabled_rules);
 
 		AppDatabase db = AppDatabase.getAppDatabase(this);
-		db.ruleDao().getAllEnabled().observe(this, rules -> {
+		db.ruleDao().getAll().observe(this, rules -> {
 			for (Rule rule : rules) {
 				LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.rule_item, null, false);
 				replaceInLayout(layout, R.id.name, rule.getName());
 				layout.setOnClickListener((View v) -> {
 					goToRule(rule);
 				});
-				mainView.addView(layout);
+
+				if (rule.getIsEnabled()) enabledView.addView(layout);
+				else disabledView.addView(layout);
 			}
 		});
 	}

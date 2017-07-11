@@ -5,13 +5,22 @@
 	xmlns:bind="http://schemas.android.com/tools">
 
 	<data>
+		<import type="android.view.View"/>
 		<variable name="rule" type="com.rhathe.portforwardingunlocked.Rule"/>
 	</data>
 
 	<LinearLayout
-		android:orientation="vertical"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<Switch
+			android:checked="@={rule.isEnabled}"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="right"
+			android:visibility="@{rule.uid > 0 ? View.VISIBLE : View.GONE}"
+			android:text="Enabled"/>
 
 		<android.support.design.widget.TextInputLayout
 			android:layout_width="match_parent"
@@ -113,6 +122,20 @@
 
 		</LinearLayout>
 
+		<android.support.design.widget.TextInputLayout
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/rule_detail_height"
+			android:id="@+id/target_layout"
+			android:theme="@style/ruleDetailField">
+
+			<EditText
+				android:text="@={rule.target}"
+				android:id="@+id/target"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:inputType="text"
+				android:hint="Target"/>
+		</android.support.design.widget.TextInputLayout>
 	</LinearLayout>
 
 </layout>
