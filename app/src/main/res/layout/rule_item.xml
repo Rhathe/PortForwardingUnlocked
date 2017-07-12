@@ -5,6 +5,7 @@
 	</data>
 
 	<LinearLayout
+		android:padding="5dp"
 		android:orientation="vertical"
 		android:background="@drawable/border"
 		android:layout_width="match_parent"
@@ -18,8 +19,8 @@
 			android:layout_height="40dp"/>
 
 		<TextView
-			android:id="@+id/details"
-			android:text="dsfsdf"
+			android:id="@+id/from_details"
+			android:text="@{rule.displayInfo()}"
 			android:layout_width="match_parent"
 			android:layout_height="40dp"/>
 	</LinearLayout>

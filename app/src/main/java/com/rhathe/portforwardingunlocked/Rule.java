@@ -230,6 +230,19 @@ public class Rule implements Observable {
 		if (portRange < 0) throw new NegativeRangeException();
 	}
 
+	public String displayInfo() {
+		return String.format(
+			"[%s] | %s: [%s, %s] -> %s: [%s, %s]",
+			getProtocol(),
+			getFromInterface(),
+			getFromPort(),
+			getFromEndPort(),
+			getTarget(),
+			getTargetPort(),
+			getTargetPort() + getPortRange()
+		);
+	}
+
 	public static class EmptyNameException extends Exception {}
 	public static class NegativeRangeException extends Exception {}
 }
