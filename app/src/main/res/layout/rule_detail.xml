@@ -6,133 +6,138 @@
 		<variable name="rule" type="com.rhathe.portforwardingunlocked.Rule"/>
 	</data>
 
-	<LinearLayout
+	<ScrollView
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical">
+		android:layout_height="match_parent">
 
-		<Switch
-			android:checked="@={rule.isEnabled}"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="right"
-			android:visibility="@{rule.uid > 0 ? View.VISIBLE : View.GONE}"
-			android:text="Enabled"/>
-
-		<android.support.design.widget.TextInputLayout
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/rule_detail_height"
-			android:id="@+id/name_layout"
-			android:theme="@style/ruleDetailField">
-
-			<EditText
-				android:text="@={rule.name}"
-				android:id="@+id/name"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:inputType="text"
-				android:hint="Rule Name"/>
-		</android.support.design.widget.TextInputLayout>
-
-		<TextView
-			android:text="Protocol"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/label_height"
-			android:id="@+id/textView"/>
-
-		<Spinner
-			android:id="@+id/protocol"
-			android:entries="@array/protocols"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/rule_detail_height"
-			android:selectedItemPosition="@={rule.protocolIdx}"/>
-
-		<TextView
-			android:text="Interface"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/label_height"/>
-		<Spinner
-			android:id="@+id/from_interface"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/rule_detail_height"
-			android:entries="@{rule.fromInterfaces}"
-			android:selectedItemPosition="@={rule.fromInterfaceIdx}"/>
-
-		<TextView
-			android:text="From Ports"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/label_height"/>
 		<LinearLayout
-			android:orientation="horizontal"
 			android:layout_width="match_parent"
-			android:layout_height="@dimen/rule_detail_height">
+			android:layout_height="match_parent"
+			android:orientation="vertical">
 
-			<EditText
-				android:text="@={`` + rule.fromPort}"
-				android:id="@+id/from_port"
-				android:layout_width="80dp"
-				android:layout_height="match_parent"
-				android:inputType="number"
-				android:hint="Start"/>
-			<TextView
-				android:text="-"
-				android:layout_width="40dp"
-				android:layout_height="@dimen/label_height"/>
-			<EditText
-				android:text="@={`` + rule.fromEndPort}"
-				android:id="@+id/from_end_port"
-				android:layout_width="80dp"
-				android:layout_height="match_parent"
-				android:inputType="number"
-				android:hint="End"/>
-
-		</LinearLayout>
-
-		<TextView
-			android:text="Target Ports"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/label_height"/>
-		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/rule_detail_height">
-
-			<EditText
-				android:text="@={`` + rule.targetPort}"
-				android:id="@+id/target_port"
-				android:layout_width="80dp"
-				android:layout_height="match_parent"
-				android:inputType="number"
-				android:hint="Start"/>
-			<TextView
-				android:text="-"
-				android:layout_width="40dp"
-				android:layout_height="@dimen/label_height"/>
-			<EditText
-				android:text="@{`` + (rule.targetPort + rule.portRange)}"
-				android:id="@+id/target_end_port"
-				android:inputType="none"
-				android:focusable="false"
-				android:clickable="false"
-				android:layout_width="80dp"
-				android:layout_height="match_parent"/>
-
-		</LinearLayout>
-
-		<android.support.design.widget.TextInputLayout
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/rule_detail_height"
-			android:id="@+id/target_layout"
-			android:theme="@style/ruleDetailField">
-
-			<EditText
-				android:text="@={rule.target}"
-				android:id="@+id/target"
+			<Switch
+				android:checked="@={rule.isEnabled}"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:inputType="text"
-				android:hint="Target"/>
-		</android.support.design.widget.TextInputLayout>
-	</LinearLayout>
+				android:layout_height="wrap_content"
+				android:gravity="right"
+				android:visibility="@{rule.uid > 0 ? View.VISIBLE : View.GONE}"
+				android:text="Enabled"/>
+
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/rule_detail_height"
+				android:id="@+id/name_layout"
+				android:theme="@style/ruleDetailField">
+
+				<EditText
+					android:text="@={rule.name}"
+					android:id="@+id/name"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:inputType="text"
+					android:hint="Rule Name"/>
+			</android.support.design.widget.TextInputLayout>
+
+			<TextView
+				android:text="Protocol"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/label_height"
+				android:id="@+id/textView"/>
+
+			<Spinner
+				android:id="@+id/protocol"
+				android:entries="@array/protocols"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/rule_detail_height"
+				android:selectedItemPosition="@={rule.protocolIdx}"/>
+
+			<TextView
+				android:text="Interface"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/label_height"/>
+			<Spinner
+				android:id="@+id/from_interface"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/rule_detail_height"
+				android:entries="@{rule.fromInterfaces}"
+				android:selectedItemPosition="@={rule.fromInterfaceIdx}"/>
+
+			<TextView
+				android:text="From Ports"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/label_height"/>
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/rule_detail_height">
+
+				<EditText
+					android:text="@={`` + rule.fromPort}"
+					android:id="@+id/from_port"
+					android:layout_width="80dp"
+					android:layout_height="match_parent"
+					android:inputType="number"
+					android:hint="Start"/>
+				<TextView
+					android:text="-"
+					android:layout_width="40dp"
+					android:layout_height="@dimen/label_height"/>
+				<EditText
+					android:text="@={`` + rule.fromEndPort}"
+					android:id="@+id/from_end_port"
+					android:layout_width="80dp"
+					android:layout_height="match_parent"
+					android:inputType="number"
+					android:hint="End"/>
+
+			</LinearLayout>
+
+			<TextView
+				android:text="Target Ports"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/label_height"/>
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/rule_detail_height">
+
+				<EditText
+					android:text="@={`` + rule.targetPort}"
+					android:id="@+id/target_port"
+					android:layout_width="80dp"
+					android:layout_height="match_parent"
+					android:inputType="number"
+					android:hint="Start"/>
+				<TextView
+					android:text="-"
+					android:layout_width="40dp"
+					android:layout_height="@dimen/label_height"/>
+				<EditText
+					android:text="@{`` + (rule.targetPort + rule.portRange)}"
+					android:id="@+id/target_end_port"
+					android:inputType="none"
+					android:focusable="false"
+					android:clickable="false"
+					android:layout_width="80dp"
+					android:layout_height="match_parent"/>
+
+			</LinearLayout>
+
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/rule_detail_height"
+				android:id="@+id/target_layout"
+				android:theme="@style/ruleDetailField">
+
+				<EditText
+					android:text="@={rule.target}"
+					android:id="@+id/target"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:inputType="text"
+					android:hint="Target"/>
+			</android.support.design.widget.TextInputLayout>
+		</LinearLayout>
+	</ScrollView>
 
 </layout>

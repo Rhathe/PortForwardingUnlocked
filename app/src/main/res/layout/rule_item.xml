@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 	<data>
 		<variable name="rule" type="com.rhathe.portforwardingunlocked.Rule"/>
+		<variable name="fsStatus" type="com.rhathe.portforwardingunlocked.ForwardingService.Companion.Status"/>
 	</data>
 
 	<LinearLayout
@@ -10,8 +11,8 @@
 		android:background="@drawable/border"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:clickable="true"
-		android:focusable="true">
+		android:clickable="@{!fsStatus.enabled}"
+		android:focusable="@{!fsStatus.enabled}">
 		<TextView
 			android:id="@+id/name"
 			android:text="@{rule.name}"

@@ -2,6 +2,10 @@ package com.rhathe.portforwardingunlocked
 
 import android.app.IntentService
 import android.content.Intent
+import android.databinding.BaseObservable
+import android.databinding.Bindable
+import android.databinding.Observable
+import android.databinding.PropertyChangeRegistry
 import android.util.Log
 
 import java.net.Inet4Address
@@ -9,7 +13,6 @@ import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.NetworkInterface
 import java.net.SocketException
-import java.util.Enumeration
 import java.util.concurrent.CompletionService
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.ExecutorCompletionService
@@ -19,15 +22,16 @@ import java.util.concurrent.Future
 
 import android.os.PowerManager
 import android.support.v4.content.LocalBroadcastManager
+import java.util.*
 
 
 class ForwardingService : IntentService {
 
 	private val executorService: ExecutorService
 
-
 	//wake lock
 	private var wakeLock: PowerManager.WakeLock? = null
+
 
 	constructor() : super(TAG) {
 		this.executorService = Executors.newFixedThreadPool(30)
@@ -37,14 +41,13 @@ class ForwardingService : IntentService {
 		this.executorService = executorService
 	}
 
-
 	override fun onCreate() {
 		super.onCreate()
 
 		// https://developer.android.com/intl/ja/training/scheduling/wakelock.html
 		val powerManager = getSystemService(POWER_SERVICE) as PowerManager
 		wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG)
-		wakeLock!!.acquire()
+		wakeLock!!.acquire(100000)
 	}
 
 	override fun onHandleIntent(intent: Intent?) {
@@ -121,19 +124,9 @@ class ForwardingService : IntentService {
 
 	@Throws(SocketException::class, Exception::class)
 	private fun getNetworkInterface(interfaceName: String): NetworkInterface {
-		val en = NetworkInterface.getNetworkInterfaces()
-		while (en.hasMoreElements()) {
-			val intf = en.nextElement()
-
-			Log.d(TAG, intf.displayName + " vs " + interfaceName)
-			if (intf.displayName == interfaceName) {
-
-				Log.i(TAG, "Found the relevant Interface.")
-				return intf
-			}
-		}
-
-		throw Exception("Could not find interface " + interfaceName)
+		val intf = getInterfaces().find({x -> x.displayName == interfaceName}) ?:
+				throw Exception("Could not find interface " + interfaceName)
+		return intf
 	}
 
 	@Throws(Exception::class)
@@ -160,5 +153,33 @@ class ForwardingService : IntentService {
 
 		val BROADCAST_ACTION = "com.rhathe.portforwardingunlocked.ForwardingService.BROADCAST"
 		val ERROR_MESSAGE = "com.rhathe.portforwardingunlocked.ForwardingService.PORT_FORWARD_ERROR"
+
+		private var enabled: Boolean = false
+		var status: Status = Status()
+
+		class Status: BaseObservable() {
+			@Bindable
+			fun getEnabled(): Boolean {
+				return enabled
+			}
+
+			fun setEnabled(_enabled: Boolean) {
+				enabled = _enabled
+				notifyPropertyChanged(BR.enabled)
+			}
+		}
+		fun getInterfaces(): List<NetworkInterface> {
+			val en = NetworkInterface.getNetworkInterfaces()
+			val intfs = if (en != null) Collections.list(en) else emptyList<NetworkInterface>()
+			return intfs.map({ intf ->
+				val isValid = Collections.list(intf.inetAddresses).any({ inetAddress ->
+					val address = inetAddress.hostAddress
+					address != null && address.isNotEmpty() && inetAddress is Inet4Address
+				})
+
+				if (isValid) intf
+				else null
+			}).filterIsInstance<NetworkInterface>()
+		}
 	}
 }

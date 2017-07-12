@@ -13,19 +13,16 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 
-import com.rhathe.portforwardingunlocked.AppDatabase
-import com.rhathe.portforwardingunlocked.R
-import com.rhathe.portforwardingunlocked.Rule
 import java.net.Inet4Address
 import java.net.NetworkInterface
 import java.util.*
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.app.AlertDialog
-import com.rhathe.portforwardingunlocked.BR
+import com.rhathe.portforwardingunlocked.*
 
 
-class BaseRuleActivity : AppCompatActivity() {
+class RuleActivity : AppCompatActivity() {
 	var ruleUid: String = ""
 	var rule: Rule = Rule()
 	var db: AppDatabase = AppDatabase.getAppDatabase(this)
@@ -49,6 +46,7 @@ class BaseRuleActivity : AppCompatActivity() {
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		menuInflater.inflate(R.menu.rule_detail, menu)
+		if (ruleUid.isBlank()) menu.findItem(R.id.action_delete_rule).setVisible(false)
 		return true
 	}
 
@@ -66,22 +64,8 @@ class BaseRuleActivity : AppCompatActivity() {
 		return super.onOptionsItemSelected(item)
 	}
 
-	private fun getInterfaces(): List<String> {
-		val en = NetworkInterface.getNetworkInterfaces()
-		val intfs = if (en != null) Collections.list(en) else emptyList<NetworkInterface>()
-		return intfs.map({ intf ->
-			val isValid = Collections.list(intf.inetAddresses).any({ inetAddress ->
-				val address = inetAddress.hostAddress
-				address != null && address.isNotEmpty() && inetAddress is Inet4Address
-			})
-
-			if (isValid) intf.displayName
-			else ""
-		}).filter({ x -> x != "" })
-	}
-
 	private fun initFromInterfaces() {
-		rule.fromInterfaces = getInterfaces()
+		rule.fromInterfaces = ForwardingService.getInterfaces().map({x -> x.displayName})
 	}
 
 	private fun backToMain(fn: () -> Unit) {

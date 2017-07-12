@@ -23,13 +23,13 @@
         </activity>
 
         <activity
-            android:name=".ui.BaseRuleActivity"
+            android:name=".ui.RuleActivity"
             android:parentActivityName=".ui.MainActivity">
         </activity>
 
-        <!--<service
+        <service
             android:name=".ForwardingService"
-            android:exported="false"></service>-->
+            android:exported="false"></service>
     </application>
 
 </manifest>
