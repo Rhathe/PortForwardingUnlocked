@@ -3,14 +3,19 @@ package com.rhathe.portforwardingunlocked.ui;
 import android.arch.lifecycle.LifecycleActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rhathe.portforwardingunlocked.AppDatabase;
+import com.rhathe.portforwardingunlocked.BR;
 import com.rhathe.portforwardingunlocked.R;
 import com.rhathe.portforwardingunlocked.Rule;
 
@@ -44,24 +49,20 @@ public class MainActivity extends LifecycleActivity {
 		AppDatabase db = AppDatabase.getAppDatabase(this);
 		db.ruleDao().getAll().observe(this, rules -> {
 			for (Rule rule : rules) {
-				LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.rule_item, null, false);
-				replaceInLayout(layout, R.id.name, rule.getName());
-				layout.setOnClickListener((View v) -> {
-					goToRule(rule);
-				});
+				LinearLayout parent = rule.getIsEnabled() ? enabledView : disabledView;
 
-				if (rule.getIsEnabled()) enabledView.addView(layout);
-				else disabledView.addView(layout);
+				ViewDataBinding binding = DataBindingUtil.inflate(inflater, R.layout.rule_item, parent, false);
+				binding.setVariable(BR.rule, rule);
+
+				LinearLayout layout = (LinearLayout) binding.getRoot();
+				layout.setOnClickListener((View v) -> goToRule(rule));
+
+				parent.addView(layout);
 			}
 		});
 	}
 
-	private void replaceInLayout(LinearLayout layout, int id, String text) {
-		TextView view = layout.findViewById(id);
-		view.setText(text);
-	}
-
-	private void goToRule(Rule rule) {
+	public void goToRule(Rule rule) {
 		Intent ruleIntent = new Intent(this, BaseRuleActivity.class);
 		ruleIntent.putExtra("ruleUid", rule.getUid());
 		startActivity(ruleIntent);

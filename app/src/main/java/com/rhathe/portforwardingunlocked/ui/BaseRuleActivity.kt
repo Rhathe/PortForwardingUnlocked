@@ -1,5 +1,6 @@
 package com.rhathe.portforwardingunlocked.ui
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TextInputLayout
@@ -20,6 +21,7 @@ import java.net.NetworkInterface
 import java.util.*
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
+import android.support.v7.app.AlertDialog
 import com.rhathe.portforwardingunlocked.BR
 
 
@@ -113,8 +115,10 @@ class BaseRuleActivity : AppCompatActivity() {
 	}
 
 	private fun deleteRule() {
-		backToMain {
-			db?.ruleDao()?.delete(rule)
-		}
+		val alert = AlertDialog.Builder(this)
+		alert.setMessage("Do you want to delete this rule?")
+			.setPositiveButton("ОК") { _, _ -> backToMain { db.ruleDao().delete(rule) } }
+			.setNegativeButton("CANCEL") { _, _ -> {} }
+			.show()
 	}
 }
