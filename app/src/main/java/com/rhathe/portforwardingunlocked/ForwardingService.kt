@@ -97,6 +97,9 @@ class ForwardingService : IntentService {
 			}
 		}
 
+		// Set enabled flag
+		status.setEnabled(true)
+
 		var completedFuture: Future<*>
 
 		// loop through each callback, and handle an exception
@@ -145,6 +148,13 @@ class ForwardingService : IntentService {
 		}
 
 		throw Exception("Could not find address for interface " + interfaceName)
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		executorService.shutdownNow()
+		status.setEnabled(false)
+
 	}
 
 	companion object {

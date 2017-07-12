@@ -24,6 +24,9 @@ public interface RuleDao {
 	@Query("SELECT * FROM rule WHERE uid = :uid")
 	Rule getById(String uid);
 
+	@Query("SELECT * FROM rule WHERE uid != :uid AND :from <= from_port + port_range AND :end >= from_port")
+	Rule getOverlappingRule(int uid, int from, int end);
+
 	@Insert
 	void insert(Rule rule);
 

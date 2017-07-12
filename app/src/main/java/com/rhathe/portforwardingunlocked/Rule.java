@@ -6,6 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.databinding.InverseMethod;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 import android.util.Log;
@@ -228,6 +229,7 @@ public class Rule implements Observable {
 	public void checkIsValid() throws Exception {
 		if (name == null || name.isEmpty()) throw new EmptyNameException();
 		if (portRange < 0) throw new NegativeRangeException();
+		if (fromPort == 0 || targetPort == 0) throw new ZeroPortException();
 	}
 
 	public String displayInfo() {
@@ -245,4 +247,6 @@ public class Rule implements Observable {
 
 	public static class EmptyNameException extends Exception {}
 	public static class NegativeRangeException extends Exception {}
+	public static class ZeroPortException extends Exception {}
+	public static class OverlappingException extends Exception { public Rule rule; }
 }

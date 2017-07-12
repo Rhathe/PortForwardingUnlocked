@@ -17,11 +17,15 @@ import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LifecycleRegistryOwner
 import com.rhathe.portforwardingunlocked.*
 import java.util.Collections
+import com.rhathe.portforwardingunlocked.ForwardingService
+
+
 
 
 class MainActivity : AppCompatActivity(), LifecycleRegistryOwner {
 	private val mRegistry = LifecycleRegistry(this)
 	private var mOptionsMenu: Menu? = null
+	private var forwardingServiceIntent: Intent? = null
 
 	override fun getLifecycle(): LifecycleRegistry {
 		return mRegistry
@@ -35,6 +39,8 @@ class MainActivity : AppCompatActivity(), LifecycleRegistryOwner {
 		fab.setOnClickListener { _ -> goToRule(null) }
 
 		showRuleItems()
+
+		forwardingServiceIntent = Intent(this, ForwardingService::class.java)
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -47,17 +53,26 @@ class MainActivity : AppCompatActivity(), LifecycleRegistryOwner {
 		val id = item.itemId
 
 		when (id) {
-			R.id.action_run -> toggleForwardingService(true)
-			R.id.action_stop -> toggleForwardingService(false)
+			R.id.action_run -> runForwardingService()
+			R.id.action_stop -> stopForwardingService()
 		}
 
 		return super.onOptionsItemSelected(item)
 	}
 
 	private fun toggleForwardingService(b: Boolean) {
-		ForwardingService.status.setEnabled(b)
 		mOptionsMenu?.findItem(R.id.action_run)?.setVisible(!b)
 		mOptionsMenu?.findItem(R.id.action_stop)?.setVisible(b)
+	}
+
+	private fun runForwardingService() {
+		toggleForwardingService(true)
+		startService(forwardingServiceIntent)
+	}
+
+	private fun stopForwardingService() {
+		toggleForwardingService(false)
+		stopService(forwardingServiceIntent)
 	}
 
 	private fun showRuleItems() {

@@ -86,6 +86,33 @@ class RuleActivity : AppCompatActivity() {
 					val et = findViewById<EditText>(R.id.from_end_port)
 					et.error = "End port must be >= to start port"
 				})
+			} catch(e: Rule.ZeroPortException) {
+				runOnUiThread({
+					val setErr = { id: Int ->
+						val et = findViewById<EditText>(id)
+						et.error = "Port cannot be 0"
+					}
+
+					if (rule.fromPort == 0) setErr(R.id.from_port)
+					if (rule.targetPort == 0) setErr(R.id.target_port)
+				})
+			} catch(e: Rule.OverlappingException) {
+				val errMsg = String.format("Port conflicts with '%s' ports [%s, %s]", e.rule.name, e.rule.fromPort, e.rule.fromEndPort)
+
+				runOnUiThread({
+					val startEt = findViewById<EditText>(R.id.from_port)
+					if (rule.fromPort >= e.rule.fromPort && rule.fromPort <= e.rule.fromEndPort)
+						startEt.error = errMsg
+
+					val endEt = findViewById<EditText>(R.id.from_end_port)
+					if (rule.fromEndPort >= e.rule.fromPort && rule.fromEndPort <= e.rule.fromEndPort)
+						endEt.error = errMsg
+
+					if (rule.fromPort <= e.rule.fromPort && rule.fromEndPort >= e.rule.fromEndPort){
+						startEt.error = errMsg
+						endEt.error = errMsg
+					}
+				})
 			}
 		}.start()
 	}
@@ -93,6 +120,13 @@ class RuleActivity : AppCompatActivity() {
 	private fun saveRule() {
 		backToMain {
 			rule.checkIsValid()
+			val overlappingRule = db.ruleDao().getOverlappingRule(rule.uid, rule.fromPort, rule.fromEndPort)
+			if (overlappingRule != null) {
+				val e = Rule.OverlappingException()
+				e.rule = overlappingRule
+				throw e
+			}
+
 			if (ruleUid.isBlank()) db.ruleDao().insert(rule)
 			else db.ruleDao().update(rule)
 		}
